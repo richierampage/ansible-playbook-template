@@ -1,0 +1,9 @@
+---
+# site specific variables
+
+#site_env: "local"
+#git_branch: "dev"
+#site_domain: 'vm.{{ raw_domain }}.{{ site_env }}'
+
+hostname: 92.168.88.123
+

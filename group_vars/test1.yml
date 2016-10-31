@@ -1,0 +1,26 @@
+---
+# site specific variables
+
+raw_domain: test1
+
+
+new_repo: false
+build_method: 'repo'
+
+drush_source_root: '/var/www/stage.autospray.p3.claritis.co.uk'
+drush_source_uri: 'http://stage.autospray.p3.claritis.co.uk'
+
+drush_source_copy_db: false
+drush_source_copy_files: false
+git_source_branch: 'stage2'
+git_source_repo: 'git@bitbucket.org:rmoger/www.autospraysolutions.co.uk.git'
+
+git_version: "master"
+
+drupal_site_name: "Test1 {{ drupal_env }}"
+
+drush_location: "/home/rich/.composer/vendor/drush/drush/drush "
+drush_dev_alias: "@littlehaven.stage"
+drush_stage_alias: "@self"
+drush_prod_alias: "@littlehaven.stage"
+drush_prod_dir: "/var/www/stage.littlehaven.p3.claritis.co.uk/sites/default/files/"

@@ -1,0 +1,92 @@
+---
+
+#if new repo do git init, set up bitbucket repo, git add, intial commit,
+
+- name: Check if git exists
+  stat: path={{ drupal_site_path }}/.git
+  register: git_exists
+
+- name: Init git repo
+  command: git init
+  args:
+    chdir: "{{ drupal_site_path }}"
+  when: new_repo
+
+- name: Add code
+  command: git add .
+  args:
+    chdir: "{{ drupal_site_path }}"
+  when: new_repo
+
+- name: Inital commit
+  command: git commit -am 'Inital commit for {{ drupal_raw_domain }}'
+  args:
+    chdir: "{{ drupal_site_path }}"
+  when: new_repo
+
+- name: Create Branches
+  command: git checkout -b {{ item }}
+  with_items: "{{ git_branches }}"
+  args:
+    chdir: "{{ drupal_site_path }}"
+  when: new_repo
+
+- name: Create Remote
+  command: git remote add origin git@bitbucket.org:rmoger/{{ drupal_raw_domain }}.git
+  args:
+    chdir: "{{ drupal_site_path }}"
+  when: new_repo
+
+- uri:
+    url: https://api.bitbucket.org/2.0/repositories/rmoger/{{ raw_domain }}
+    method: POST
+    user: richard.moger@claritis.co.uk
+    return_content: yes
+    HEADER_Content-Type: "application/json"
+    password: cowdog69
+    body: '{"scm": "git", "is_private": "true"}'
+    body_format: json
+  register: dir
+  when: new_repo
+
+- name: Intial Push
+  command: git push -u origin --all
+  sudo: no
+  args:
+    chdir: "{{ drupal_site_path }}"
+  when: new_repo
+
+
+
+
+#git checkout -b [name_of_your_new_branch]
+#- uri:
+#    url: https://api.bitbucket.org/2.0/repositories/rmoger/{{ raw_domain }}
+#    method: GET
+#    user: richard.moger@claritis.co.uk
+#    return_content: yes
+#    HEADER_Content-Type: "application/json"
+#    password: cowdog69
+#    creates: "{{ drupal_site_path }}/repo-created.txt"
+#    dest: "{{ drupal_site_path }}/repo-created.txt"
+#    body: '{"scm": "git", "is_private": "true"}'
+#    body_format: json
+#    register: dir
+#- debug: var=dir.stdout_lines
+
+
+  # Create repo if cloned set
+
+#  - uri:
+#      url: https://api.bitbucket.org/2.0/repositories/rmoger/{{ raw_domain }}
+#      method: POST
+#      user: richard.moger@claritis.co.uk
+#      return_content: yes
+#      HEADER_Content-Type: "application/json"
+#      password: cowdog69
+#      creates: "{{ drupal_site_path }}/repo-created.txt"
+#      dest: "{{ drupal_site_path }}/repo-created.txt"
+##      body: '{"scm": "git", "is_private": "true"}'
+##      body_format: json
+#      register: dir
+#  - debug: var=dir.stdout_lines

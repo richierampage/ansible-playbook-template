@@ -1,0 +1,156 @@
+---
+- hosts: "{{ site }}"
+  remote_user: "{{ remote_user }}"
+  sudo: true
+
+  vars:
+    drupal_group_vars: "{{ groups[raw_domain] }}"
+
+  pre_tasks:
+
+  roles:
+
+    - { role: setup_vhosts }
+    - { role: setup_mysql }
+    - { role: get_drupal_codebase, when: drupal_env == "dev" }
+    - { role: setup_site_aliases, when: drupal_env == "dev" }
+    - { role: setup_bitbucket_repo, when: drupal_env == "dev" }
+    - { role: get_drupal_codebase, when: drupal_env == 'stage' or drupal_env == 'prod' }
+    - { role: install_drupal }
+    - { role: set_site_permissions }
+    - { role: copy_site }
+# moved to vhosts role
+
+#  - name: Create vhost file for {{ drupal_domain }} on drupalvm installs
+#    template:
+#      src=templates/{{ drupal_env }}_vhost_template.j2
+#      dest=/etc/apache2/sites-available/{{ drupal_domain }}.conf
+#
+#    notify:
+#      - restart apache2
+#
+#  - name: a2ensite {{ drupal_domain }}.conf
+#    command: a2ensite {{ drupal_domain }}.conf
+#    notify:
+#    - restart apache2
+
+# moved to vhosts role
+
+
+# moved to sql role
+
+#  - name: Create Drupal database.
+#    mysql_db: >
+#      login_user={{ mysql_admin_user }}
+#      login_password={{ mysql_admin_password }}
+#      db={{ drupal_mysql_database }}
+#      state=present
+#
+#  - name: Create a MySQL user for Drupal.
+#    mysql_user: >
+#      login_user={{ mysql_admin_user }}
+#      login_password={{ mysql_admin_password }}
+#      name={{ drupal_mysql_user }}
+#      host={{ item }}
+#      priv={{ drupal_mysql_database }}.*:ALL
+#      password={{ drupal_mysql_password }}
+#    with_items:
+#      - 127.0.0.1
+#      - ::1
+#      - localhost
+
+# moved to db role
+
+# moved to get drupal codebase role
+
+#Get Drupal. Either from repo, makefile or core
+
+#####################################################################
+
+#  # Check if Drupal dir exists
+#  - name: Check if Drupal is already present in {{ drupal_site_path }}.
+#    stat: >
+#      path={{ drupal_site_path }}
+#    register: drupal_site_built
+#
+#  # Create Drupal dir
+#  - name: Create {{ drupal_site_path }} directory
+#    file: path={{ drupal_site_path }}
+#          owner={{ remote_user }}
+#          group={{ remote_group }}
+#          mode=0775
+#          state=directory
+#    sudo: yes
+#    when: drupal_site_built.stat.exists == false
+#
+#
+#  # if build is set to makefile get makefile & run drush make
+#
+#    # Download makefile
+#  - name: Get makefile
+#    get_url: url={{ drupal_makefile_url }}
+#             dest={{ drupal_site_path }}/{{ drupal_raw_domain }}.make
+#             mode=0777
+#             group=dialout
+#             owner=501
+#    when: drupal_site_built.stat.exists == false and build_method == 'makefile'
+#    sudo: yes
+#
+#    # Get code using Drush make & downloaded makefile
+#  - name: Drush make if build set to makefile
+#    command: '{{drush_location}} make {{ drupal_raw_domain }}.make -y'
+#    args:
+#      chdir: "{{ drupal_site_path }}"
+#    sudo: no
+#    when: drupal_site_built.stat.exists == false and build_method == 'makefile'
+#
+#
+#  # if build is set to repo clone repo
+#
+#  - name: Clone the repo into {{ drupal_site_path }} if it doesn't exist
+#    git:  repo={{ git_source_repo }}
+#          bare={{ git_copy_repo }}
+#          clone=yes
+#          dest={{ drupal_site_path }}
+#          accept_hostkey=yes
+#          force=yes
+#          version={{ drupal_site_git_branch }}
+#    when: drupal_site_built.stat.exists == false and build_method == 'repo'
+#    sudo: no
+#
+#  # if build is set to core download core
+#
+#  - name: Get core either 7 or 8
+#    command: '{{drush_location}} dl drupal-{{ drupal_major_version }} --destination="." -y --drupal-project-rename="{{ drupal_domain }}" '
+#    args:
+#      chdir: "{{ drupal_path }}"
+#    when: drupal_site_built.stat.exists == false and build_method == 'core'
+#    sudo: no
+
+# moved to get drupal codebase role
+
+
+
+  tasks:
+
+
+
+
+#to be moved to roles vvv
+
+
+
+
+
+
+
+
+
+
+
+  handlers:
+
+    - name: restart apache2
+      service: name=apache2 state=restarted
+
+

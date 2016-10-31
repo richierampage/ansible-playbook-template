@@ -1,0 +1,13 @@
+---
+- hosts: "{{ site }}"
+  remote_user: vagrant
+  sudo: false
+
+  tasks:
+
+  - name: Hello World
+    command: echo 'Hello Drupal'
+    register: console
+  - debug: var=console.stdout_lines
+
+

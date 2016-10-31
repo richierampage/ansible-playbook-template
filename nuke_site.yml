@@ -1,0 +1,59 @@
+---
+- hosts: "{{ site }}"
+  remote_user: "{{ remote_user }}"
+  sudo: yes
+
+  tasks:
+
+  - name: Check if vhost exists {{ drupal_domain }}.conf
+    stat: path=/etc/apache2/sites-available/{{ drupal_domain }}.conf
+    register: drupal_vhost
+
+  - name: Disable site - a2dissite {{ drupal_domain }}.conf
+    command: a2dissite {{ drupal_domain }}.conf
+    when: drupal_vhost.stat.exists == true
+
+  - name: Delete vhost {{ drupal_domain }}.conf
+    command: rm /etc/apache2/sites-available/{{ drupal_domain }}.conf
+    when: drupal_vhost.stat.exists == true
+
+  - name: Check if Drupal dir exists {{ drupal_site_path }}.
+    stat: path={{ drupal_site_path }}
+    register: drupal_site
+
+  - name: Set to site dir 777
+    command: chmod 777 {{ drupal_site_path }} -R
+    when: drupal_site.stat.exists == true
+
+  - name: Delete drupal install {{ drupal_site_path }}.conf
+    command: rm -rf {{ drupal_site_path }}
+    when: drupal_site.stat.exists == true
+
+  - uri:
+      url: https://api.bitbucket.org/2.0/repositories/rmoger
+      method: GET
+      owner: richard.moger@claritis.co.uk
+      return_content: yes
+      HEADER_Content-Type: "application/json"
+      password: cowdog69
+      body_format: json
+      register: repolist
+      when: drupal_env = 'dev'
+
+  - name: Display result of bitbucket repo listing
+    debug: var=repolist
+
+  - name: Display repo
+    debug: var=raw_domain
+
+
+  - name: Drop drupal database
+    mysql_db: >
+      login_user={{ mysql_admin_user }}
+      login_password={{ mysql_admin_password }}
+      db={{ drupal_mysql_database }}
+      state=absent
+
+
+
+

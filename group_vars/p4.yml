@@ -1,0 +1,7 @@
+---
+# Server specific variables
+
+drush_location: "/usr/bin/drush "
+hostname: 52.209.42.192
+
+

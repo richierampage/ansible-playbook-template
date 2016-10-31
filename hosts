@@ -1,3 +1,139 @@
-[local]
-ansible.local
+localhost ansible_connection=local
+
+[defaults]
+
+################### sites
+vm ansible_host=192.168.88.123 ansible_ssh_port=22 ansible_ssh_user=vagrant ansible_ssh_private_key_file=~/.vagrant.d/insecure_private_key
+
+
+vm.test1.local ansible_host=192.168.88.123 ansible_ssh_port=22 ansible_ssh_user=vagrant ansible_ssh_private_key_file=~/.vagrant.d/insecure_private_key
+vm.sept.local ansible_host=192.168.88.123 ansible_ssh_port=22 ansible_ssh_user=vagrant ansible_ssh_private_key_file=~/.vagrant.d/insecure_private_key
+vm.h8test.local ansible_host=192.168.88.123 ansible_ssh_port=22 ansible_ssh_user=vagrant ansible_ssh_private_key_file=~/.vagrant.d/insecure_private_key
+vm.paulturnham.local ansible_host=192.168.88.123 ansible_ssh_port=22 ansible_ssh_user=vagrant ansible_ssh_private_key_file=~/.vagrant.d/insecure_private_key
+
+
+
+vm.mar.local ansible_host=192.168.88.123 ansible_ssh_port=22 ansible_ssh_user=vagrant ansible_ssh_private_key_file=~/.vagrant.d/insecure_private_key
+
+www.test1.co.uk ansible_host=52.209.42.192
+test1.stage.claritis.co.uk ansible_host=54.77.238.59
+
+sept.stage.claritis.co.uk ansible_host=54.77.238.59
+
+clar.stage.clardev.co.uk ansible_host=54.77.238.59
+
+################### sites
+
+
+#default values
+
+[default_values]
+vm.test1.local
+test1.stage.claritis.co.uk
+www.test1.co.uk
+vm.sept.local
+vm.mar.local
+sept.stage.claritis.co.uk
+vm.h8test.local
+vm.paulturnham.local
+
+
+
+################### servers
+
+#server
+
+[vm]
+vm.test1.local
+vm.sept.local
+vm.mar.local
+vm.h8test.local
+vm.paulturnham.local
+
+
+#server
+
+[p4]
+www.test1.co.uk
+
+
+[p3]
+
+test1.stage.claritis.co.uk
+www.test1.co.uk
+sept.stage.claritis.co.uk
+
+
+
+
+
+################### servers
+
+
+
+
+################### environments
+
+#environment
+
+[dev]
+vm.testsite.local
+vm.test1.local
+vm.sept.local
+vm.mar.local
+vm.h8test.local
+vm.paulturnham.local
+
+#environment
+
+[stage]
+testsite.stage.claritis.co.uk
+testsite2.stage.claritis.co.uk
+sept.stage.claritis.co.uk
+
+#environment
+
+[prod]
+www.testsite.co.uk
+www.testsite2.co.uk
+www.test1.co.uk
+
+################### environments
+
+
+
+################### projects
+
+#project
+[test1]
+www.test1.co.uk
+
+[sept]
+vm.sept.local
+sept.stage.claritis.co.uk
+
+#project
+[testsite2]
+www.testsite2.co.uk
+testsite2.stage.claritis.co.uk
+
+#marden edwards
+[mar]
+vm.mar.local
+
+#marden edwards
+[h8test]
+vm.h8test.local
+
+[paulturnham]
+vm.paulturnham.local
+
+
+################### projects
+
+
+
+
+
+
 

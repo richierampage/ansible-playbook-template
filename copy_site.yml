@@ -1,0 +1,18 @@
+---
+- hosts: "{{ site }}"
+  remote_user: "{{ remote_user }}"
+  sudo: false
+
+  vars:
+    drupal_group_vars: "{{ groups[raw_domain] }}"
+
+  pre_tasks:
+
+  roles:
+
+    - { role: copy_site }
+
+
+
+
+

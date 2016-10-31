@@ -1,0 +1,7 @@
+---
+# Server specific variables
+
+drush_location: "/home/rich/.composer/vendor/bin/drush"
+hostname: 54.77.238.59
+
+

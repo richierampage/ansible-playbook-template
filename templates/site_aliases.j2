@@ -1,0 +1,32 @@
+<?php
+
+{% for host in  drupal_group_vars  %}
+
+$aliases["{{ hostvars[host].drupal_env }}"] = array (
+  'remote-host' => '{{ hostvars[host].hostname }}',
+  'remote-user' => '{{ hostvars[host].remote_user }}',
+  'root' => '{{ hostvars[host].drupal_site_path }}',
+  'uri' => 'http://{{ hostvars[host].drupal_domain }}',
+  'path-aliases' =>
+  array (
+    '%drush' => '/usr/local/share/drush',
+    '%site' => 'sites/default/',
+  ),
+);
+
+{% endfor %}
+
+$aliases["source"] = array (
+  'remote-host' => '{{ drush_source_hostname }}',
+  'remote-user' => '{{ drush_source_remote_user }}',
+  'root' => '{{ drush_source_root }}',
+  'uri' => 'http://{{ drush_source_uri }}',
+  'path-aliases' =>
+  array (
+    '%drush' => '/usr/local/share/drush',
+    '%site' => 'sites/default/',
+    '%dump' => $local_sites . 'sites/default/sqldumps/sqldump-dev.sql',
+    '%dump-dir' => 'sites/default/sqldumps/',
+  ),
+);
+

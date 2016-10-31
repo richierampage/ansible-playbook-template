@@ -1,0 +1,7 @@
+---
+- name: Get update status
+  shell:  "{{ drush_location }} ups --security-only chdir={{ site_dir }}"
+  args:
+    executable: /bin/bash
+  register: drush
+- debug: var=drush.stdout_lines

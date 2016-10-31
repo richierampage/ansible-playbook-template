@@ -1,0 +1,74 @@
+---
+- hosts: '{{ site }}'
+  connection: local
+
+  tasks:
+
+  - name: Check if DrupalVM is already present in {{ drupal_site_path }}.
+    stat: >
+      path={{ drupal_site_path }}
+    register: drupalvm
+
+  - name: Clone DrupalVM repo into {{ drupal_site_path }} if it doesn't exist
+    git:  repo={{ drupalvm_repo }}
+          clone=yes
+          dest={{ drupal_site_path }}
+          accept_hostkey=yes
+          force=yes
+    when: drupalvm.stat.exists == false
+    sudo: no
+
+  - name: Check if Drupal site is already present in {{ drupal_site_path }}.
+    stat: >
+      path={{ drupal_site_path }}/docroot
+    register: drupal_site_built
+
+
+
+#- uri:
+#    url: https://api.bitbucket.org/2.0/repositories/rmoger/{{ sitemachinename }}
+#    method: POST
+#    user: richard.moger@claritis.co.uk
+#    return_content: yes
+#    HEADER_Content-Type: "application/json"
+#    password: cowdog69
+#    creates: "/var/www/site/docroot/repo-created.txt"
+#    dest: "/var/www/site/docroot/repo-created.txt"
+#    body: '{"scm": "git", "is_private": "true"}'
+#    body_format: json
+#    register: dir
+#- debug: var=dir.stdout_lines
+
+
+          # if repo is set clone from it
+  - name: Clone the repo into {{ drupal_site_path }}/docroot if it doesn't exist
+    git:  repo={{ git_repo }}
+          clone=yes
+          dest={{ drupal_site_path }}/docroot
+          accept_hostkey=yes
+          force=yes
+          version={{ git_branch }}
+    when: drupal_site_built.stat.exists == false and build_method == 'repo'
+    sudo: no
+
+            # if build is set to makefile get makefile
+  - name: Get makefile
+    get_url: url=https://bitbucket.org/rmoger/base1/raw/master/stubs/base1_stub.make
+             dest={{ drupal_site_path }}/makefile.make
+             mode=0777
+    when: drupal_site_built.stat.exists == false and build_method == 'makefile'
+    sudo: no
+
+  - name: Make Drupal VM template
+    template: src=templates/default.config.yml.j2
+             dest={{ drupal_site_path }}/config.yml
+             mode=0777
+    when: drupal_site_built.stat.exists == false and build_method == 'makefile'
+    sudo: no
+
+#  - name: Bring up Drupal VM
+#    command: vagrant up --provider=vmware_fusion
+#    args:
+#      chdir: "{{ drupal_site_path }}"
+
+

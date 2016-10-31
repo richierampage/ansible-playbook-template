@@ -1,0 +1,77 @@
+---
+
+#- name: Clone site db from source test.
+#  command: "{{ drush_location }} sql-sync @{{ raw_domain }}.source @self -y"
+#  args:
+#    chdir: "{{ drupal_site_path }}"
+#  sudo: false
+#  when: drupal_env == 'dev'
+
+#- name: SQL copy to other hosts from source.
+#  command: "{{ drush_location }} sql-sync @self @{{ raw_domain }}.{{ hostvars[item].drupal_env }}  -y"
+#  args:
+#    chdir: "{{ drupal_site_path }}"
+#  sudo: false
+#  with_items: "{{ groups[raw_domain] }}"
+#  when: drupal_env == 'dev' and hostvars[item].drupal_env != 'dev'
+
+- name: Clone files from source.
+  command: "drush -y rsync @{{ raw_domain }}.source:%files @self:%files "
+  args:
+    chdir: "{{ drupal_site_path }}"
+  sudo: false
+  when: drush_source_copy_files
+
+- name: Registry rebuild
+  command: "/home/rich/.composer/vendor/bin/drush rr"
+  args:
+    chdir: "{{ drupal_site_path }}"
+  sudo: false
+  when: drupal_env != 'dev'
+
+
+#- name: SQL copy
+#  command: "{{ raw_domain }} | {{ hostvars[item].drupal_site_path }}"
+#  command: "{{ drush_location }} sql-sync @self @test1.source  -y"
+#  with_items: "{{ groups[raw_domain] }}"
+#  when: drupal_env == 'dev'
+
+
+#- name: Sql dump on dev
+#  command: "drush sql-dump --result-file=../{{ raw_domain }}.sql"
+#  when: drupal_env == "dev"
+#  args:
+#    chdir: "{{ drupal_site_path }}"
+#  sudo: false
+#
+#- copy: src=/srv/myfiles/foo.conf
+#        dest=/etc/foo.conf
+
+
+
+
+#- name: Clone site db from source test.
+#  command: "{{ drush_location }} sql-sync @test1.source @self -y"
+#  args:
+#    chdir: "{{ drupal_site_path }}"
+#  sudo: false
+
+#- name: Clone site db from source.
+#  command: "{{ drush_location }} rsync @{{ raw_domain }}.source:%files @self:%files -y"
+#  args:
+#    chdir: "{{ drupal_site_path }}"
+#  sudo: false
+
+#- name: Clone site files from {{ drush_prod_dir }} to {{ site_dir }}/sites/default.
+#  synchronize:
+#    src: "{{ drush_prod_dir }}"
+#    dest: "{{ drupal_site_path }}/sites/default/files"
+#  delegate_to: 54.77.238.59
+
+
+#- name: Clear cache.
+#  command: "/home/rich/.composer/vendor/bin/drush rr"
+#  args:
+#    chdir: "{{ drupal_site_path }}"
+#  sudo: false
+#  when: drupal_env != 'dev'

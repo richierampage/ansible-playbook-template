@@ -1,2 +1,2 @@
 ---
-# tasks file for base
+- include: drush.yml

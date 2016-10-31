@@ -1,0 +1,6 @@
+---
+# site specific variables
+
+site_env: "prod"
+git_branch: "stage"
+site_domain: www.{{ raw_domain }}.co.uk

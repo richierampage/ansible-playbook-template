@@ -1,0 +1,36 @@
+---
+- hosts: all
+  remote_user: rich
+  sudo: false
+
+  tasks:
+
+  - name: Check if Drupal is already present in {{ site_dir }}.
+    stat: >
+      path={{ site_dir }}
+    register: drupal_site
+
+  - name: Clone site from production.
+    command: "{{ drush_location }} sql-sync {{ drush_prod_alias }} {{ drush_stage_alias }} -y"
+    args:
+      chdir: "{{ site_dir }}"
+
+  - name: Clone site files from {{ drush_prod_dir }} to {{ site_dir }}/sites/default.
+    synchronize:
+      src: "{{ drush_prod_dir }}"
+      dest: "{{ site_dir }}/sites/default/files"
+    delegate_to: 54.77.238.59
+
+
+
+
+  - name: Clear cache.
+    command: "{{ drush_location }} cc all"
+    args:
+      chdir: "{{ site_dir }}"
+
+
+
+
+
+

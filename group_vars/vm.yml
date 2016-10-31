@@ -1,0 +1,23 @@
+---
+# Variables for DrupalVM
+
+
+remote_user: 501
+remote_group: dialout
+
+drush_location:  "drush"
+
+drupal_raw_domain: testsite
+drupal_subdomain: vm
+drupal_tld: local
+drupal_domain: "{{ drupal_subdomain }}.{{ drupal_raw_domain }}.{{ drupal_tld }}"
+drupal_path: "/var/www"
+drupal_site_path: "{{ drupal_path }}/{{ drupal_domain }}"
+drupal_env: "dev"
+
+# mysql admin credential
+mysql_admin_user: root
+mysql_admin_password: root
+
+
+

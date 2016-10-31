@@ -1,0 +1,13 @@
+---
+
+- name: Create drush folder
+  file:
+    path="{{ drupal_site_path }}/sites/all/drush"
+    state=directory
+
+- name: Create site aliases on dev site
+  template:
+    src=templates/site_aliases.j2
+    dest="{{ drupal_site_path }}/sites/all/drush/{{ raw_domain }}.aliases.drushrc.php"
+
+

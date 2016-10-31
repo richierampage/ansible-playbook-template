@@ -1,0 +1,21 @@
+---
+
+remote_user: rich
+remote_group: www-data
+
+copy_ssh_key: true
+
+drush_location: "/home/rich/.composer/vendor/drush/drush/drush "
+drupal_raw_domain: test1
+drupal_subdomain: ''
+drupal_tld: stage.claritis.co.uk
+drupal_domain: "{{ drupal_raw_domain }}.{{ drupal_tld }}"
+drupal_path: "/var/www"
+drupal_site_path: "{{ drupal_path }}/{{ drupal_domain }}"
+drupal_env: "stage"
+drupal_site_name: "{{ drupal_raw_domain }} - {{drupal_env}}"
+
+# mysql admin credential
+mysql_admin_user: root
+mysql_admin_password: toonguy48
+

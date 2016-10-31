@@ -1,0 +1,2 @@
+---
+- include: setup_site_aliases.yml

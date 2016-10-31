@@ -1,0 +1,29 @@
+---
+# site specific variables
+
+raw_domain: paulturnham
+
+drush_source_root: '/var/www/www.mardenedwards.com'
+drush_source_uri: 'http://mard.p3.claritis.co.uk'
+
+new_repo: false
+build_method: 'core'
+
+
+
+drush_source_copy_db: false
+drush_source_copy_files: false
+git_source_branch: 'dev'
+
+
+git_version: "dev"
+
+drupal_site_name: "paultturnham {{ drupal_env }}"
+
+
+#existing sites
+drush_location: "/home/rich/.composer/vendor/drush/drush/drush "
+#drush_dev_alias: "@littlehaven.stage"
+#drush_stage_alias: "@self"
+#drush_prod_alias: "@littlehaven.stage"
+#drush_prod_dir: "/var/www/stage.littlehaven.p3.claritis.co.uk/sites/default/files/"

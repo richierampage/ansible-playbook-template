@@ -1,0 +1,36 @@
+---
+# set perms. Thanks to Wtower/ansible-drupal-perms
+
+- name: Setting ownership
+  file: path="{{ drupal_site_path }}" owner="rich" group="www-data" recurse=yes
+  become: true
+  when: drupal_env != "dev"
+
+- name: Setting permissions on all directories in root
+  command: find "{{ drupal_site_path }}" -type d -exec chmod u=rwx,g=rx,o= {} \;
+
+- name: Setting permissions on all files in root
+  command: find "{{ drupal_site_path }}" -type f -exec chmod u=rwx,g=rx,o= {} \;
+
+#  - name: Setting permissions on tmp directory
+#    command: find "{{ drupal_site_path }}/tmp" -exec chmod ug=rwx,o= {} \;
+
+- name: Setting permissions on [files] directories in sites
+  command: find "{{ drupal_site_path }}/sites" -type d -name files -exec chmod ug=rwx,o= {} \;
+
+- name: Setting permissions on all files inside all [files] directories in sites
+  shell: find "{{ drupal_site_path }}/sites"  -name files -type d -exec find '{}' -type f \; | while read FILE; do chmod ug=rw,o= "$FILE"; done
+
+- name: Setting permissions on all directories inside all [files] directories in sites
+  shell: find "{{ drupal_site_path }}/sites"  -name files -type d -exec find '{}' -type d \; | while read DIR; do chmod ug=rwx,o= "$DIR"; done
+
+  # set perms. Thanks to Wtower/ansible-drupal-perms
+
+- name: Set permissions properly on default folder.
+  file: path="{{ drupal_site_path }}/sites/default" mode=777 state=directory
+
+- name: Set permissions properly on settings.php.
+  file: path="{{ drupal_site_path }}/sites/default/settings.php" mode=744
+
+- name: Set permissions properly on files directory.
+  file: path="{{ drupal_site_path }}/sites/default/files" mode=777 state=directory recurse=yes

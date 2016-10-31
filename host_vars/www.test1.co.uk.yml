@@ -1,0 +1,21 @@
+---
+
+remote_user: rich
+remote_group: www-data
+
+
+copy_ssh_key: true
+
+drush_location: "/usr/bin/drush "
+drupal_env: "prod"
+drupal_raw_domain: test1
+drupal_subdomain: www
+drupal_tld: co.uk
+drupal_domain: "{{ drupal_subdomain }}.{{ drupal_raw_domain }}.{{ drupal_tld }}"
+drupal_path: "/var/www"
+drupal_site_path: "{{ drupal_path }}/{{ drupal_domain }}"
+drupal_site_name: "{{ drupal_raw_domain }} - {{drupal_env}}"
+
+# mysql admin credential
+mysql_admin_user: root
+mysql_admin_password: 8PY8CCf1@U3y

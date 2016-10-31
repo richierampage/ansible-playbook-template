@@ -1,0 +1,82 @@
+---
+
+# Host defaults
+
+remote_user: rich
+remote_group: www-data
+
+copy_ssh_key: false
+# drupal specific variables
+
+# Drupal Install
+drupal_raw_domain: testsite
+drupal_subdomain: www
+drupal_tld: co.uk
+drupal_domain: "{{ drupal_subdomain }}.{{ drupal_raw_domain }}.{{ drupal_tld }}"
+drupal_path: "/var/www"
+drupal_site_path: "{{ drupal_path }}/{{ drupal_domain }}"
+drupal_env: "dev"
+drupal_makefile_url: "https://bitbucket.org/rmoger/base1/raw/master/stubs/base1_stub.make"
+
+#git
+drupal_site_git_branch: "stage"
+git_repo: "git@bitbucket.org:rmoger/www.thelittlehaven.co.uk.git"
+
+# Drupal Site
+drupal_major_version: 7
+drupal_install_profile: standard
+drupal_site_name: "Site Name"
+drupal_site_mail: "admin@claritis.co.uk"
+drupal_account_name: admin
+drupal_account_pass: admin
+
+# mysql admin credential
+#mysql_admin_user: root
+#mysql_admin_password: toonguy48
+
+# Drupal Database
+drupal_mysql_user: "{{ drupal_raw_domain }}{{ drupal_env }}"
+drupal_mysql_password: "{{ drupal_raw_domain }}{{ drupal_env }}"
+drupal_mysql_database: "{{ drupal_raw_domain }}{{ drupal_env }}"
+
+mysql_admin_user: root
+mysql_admin_password: toonguy48
+
+#git
+git_copy_repo: "no"
+clear_repo: false
+git_branches: [ 'dev', 'stage', 'prod' ]
+
+# Drupal Site Files
+drupal_files_dir: '{{ drupal_site_path }}/sites/default/files'
+drupal_config_dir: '{{ drupal_site_path }}/config/sync'
+
+#Drush
+drush_location: '/home/rich/.composer/vendor/drush/drush/drush '
+drush_alias: '@{{ drupal }}.{{ drupal_env }}'
+
+drush_source_hostname: '54.77.238.59'
+drush_source_remote_user: 'rich'
+
+drush_source_copy_db: false
+drush_source_copy_files: false
+
+#DrupalVM specifc settings
+drupalvm_repo: https://github.com/geerlingguy/drupal-vm.git
+build_method: 'core'
+build_makefile: false
+drush_makefile_path: 'makefile.make'
+install_site: true
+local_vm_ip: 192.168.88.110
+
+#drupal_enable_modules
+# Set this to false if you don't need to install drupal (using the drupal_*
+# settings below), but instead copy down a database (e.g. using drush sql-sync).
+
+
+
+
+
+
+
+

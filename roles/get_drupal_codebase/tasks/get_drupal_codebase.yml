@@ -1,0 +1,94 @@
+---
+
+
+#Get Drupal. Either from repo, makefile or core
+
+#####################################################################
+
+# Set source repo to same as target repo if it doesn't exist
+
+- name:  Setup source repo uri to same as target repo if existing
+  set_fact:
+    git_target_repo: "{{ git_source_repo }}"
+  when: new_repo and not build_method == 'core'
+
+- name:  Setup source repo uri when copying
+  set_fact:
+    git_target_repo: "git@bitbucket.org:rmoger/{{ drupal_raw_domain }}.git"
+  when:  new_repo and not drupal_env == 'dev'
+
+- name:  Set source repo to same as target repo if it doesn't exist
+  set_fact:
+    git_target_repo: "{{ git_source_repo }}"
+  when: not new_repo and not build_method == 'core'
+
+
+
+# Check if Drupal dir exists
+- name: Check if Drupal is already present in {{ drupal_site_path }}.
+  stat: >
+    path={{ drupal_site_path }}
+  register: drupal_site_built
+
+- name:  Set variable to clone bare repo when creating a new repo
+  set_fact:
+    clear_repo: true
+  when: new_repo and drupal_site_built.stat.exists == false and drupal_env == 'dev'
+
+
+# Create Drupal dir
+- name: Create {{ drupal_site_path }} directory
+  file: path={{ drupal_site_path }}
+        owner={{ remote_user }}
+        group={{ remote_group }}
+        mode=0775
+        state=directory
+  sudo: yes
+  when: drupal_site_built.stat.exists == false
+
+# if build is set to makefile get makefile & run drush make
+
+  # Download makefile
+- name: Get makefile
+  get_url: url={{ drupal_makefile_url }}
+           dest={{ drupal_site_path }}/{{ drupal_raw_domain }}.make
+           mode=0777
+           group=dialout
+           owner=501
+  when: drupal_site_built.stat.exists == false and build_method == 'makefile' and drupal_env == 'dev'
+  sudo: no
+
+  # Get code using Drush make & downloaded makefile
+- name: Drush make if build set to makefile - {{drush_location}} make {{ drupal_raw_domain }}.make -y
+  command: '{{drush_location}} make {{ drupal_raw_domain }}.make -y'
+  args:
+    chdir: "{{ drupal_site_path }}"
+  sudo: no
+  when: drupal_site_built.stat.exists == false and build_method == 'makefile'
+
+
+# if build is set to repo clone repo
+
+- name: Clone the repo into {{ drupal_site_path }} if it doesn't exist
+  git:  repo={{ git_target_repo }}
+        clone=yes
+        dest={{ drupal_site_path }}
+        accept_hostkey=yes
+        force=yes
+        version={{ drupal_site_git_branch }}
+  when: drupal_site_built.stat.exists == false and build_method == 'repo'
+  sudo: no
+
+# if build is set to core download core
+
+- name: Get core either 7 or 8
+  command: '{{drush_location}} dl drupal-{{ drupal_major_version }} --destination="." -y --drupal-project-rename="{{ drupal_domain }}" '
+  args:
+    chdir: "{{ drupal_path }}"
+  when: drupal_site_built.stat.exists == false and build_method == 'core'
+  sudo: no
+
+- name: Remove .git directory if new_repo ({{ drupal_site_path }}/.git)
+  command: "rm -rf {{ drupal_site_path }}/.git/"
+  when: clear_repo
+  sudo: yes

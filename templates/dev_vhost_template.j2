@@ -1,0 +1,16 @@
+
+<VirtualHost *:80>
+     ServerAdmin richard.moger@claritis.co.uk
+     ServerName   {{ drupal_domain }}
+     ServerAlias  {{ drupal_domain }}
+     DocumentRoot /var/www/drupalvm/{{ drupal_domain }}
+
+     <Directory /var/www/drupalvm/{{ drupal_domain }}>
+        Options Indexes FollowSymLinks MultiViews
+        Require all granted
+        #LogLevel Debug
+        AllowOverride All
+     </Directory>
+
+
+</VirtualHost>

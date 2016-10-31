@@ -1,0 +1,26 @@
+---
+# site specific variables
+
+raw_domain: sept
+hostname: 54.77.238.59
+
+new_repo: false
+build_method: 'repo'
+
+drush_source_root: '/var/www/www.septodontlearning.co.uk'
+drush_source_uri: 'www.septodontlearning.co.uk'
+
+drush_source_copy_db: true
+drush_source_copy_files: true
+git_source_branch: 'dev'
+git_source_repo: 'git@bitbucket.org:rmoger/septodont.git'
+
+git_version: "dev"
+
+drupal_site_name: "Sept {{ drupal_env }}"
+
+drush_location: "/home/rich/.composer/vendor/drush/drush/drush "
+#drush_dev_alias: "@littlehaven.stage"
+#drush_stage_alias: "@self"
+#drush_prod_alias: "@littlehaven.stage"
+#drush_prod_dir: "/var/www/stage.littlehaven.p3.claritis.co.uk/sites/default/files/"

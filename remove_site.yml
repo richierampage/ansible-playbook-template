@@ -1,0 +1,40 @@
+---
+- hosts: p3.claritis.co.uk
+  remote_user: rich
+  sudo: true
+  gather_facts: False
+
+  tasks:
+
+  - name: a2dissite {{ drupal_domain }}.conf
+    command: a2ensite {{ drupal_domain }}.conf
+    notify:
+    - restart apache2
+
+  - name: Delete vhost www.{{ domain }}.conf
+    command: rm /etc/apache2/sites-available/www.{{ domain }}.conf
+    notify:
+    - restart apache2
+
+  - name: Remove vhost file for www.{{ domain }}
+    template:
+      src=templates/prod_vhost_template.j2
+      dest=/etc/apache2/sites-available/www.{{ domain }}.conf
+
+    notify:
+      - restart apache2
+
+  - name: Disable site - a2dissite www.{{ domain }}.conf
+    command: a2dissite www.{{ domain }}.conf
+    notify:
+    - restart apache2
+
+
+
+  handlers:
+    - name: restart apache2
+      service: name=apache2 state=restarted
+
+
+
+

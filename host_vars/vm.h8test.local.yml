@@ -1,0 +1,23 @@
+---
+
+remote_user: 501
+remote_group: dialout
+
+copy_ssh_key: true
+
+drush_location:  "drush"
+
+drupal_major_version: 8
+build_method: 'core'
+drupal_raw_domain: h8test
+drupal_subdomain: vm
+drupal_tld: local
+drupal_domain: "{{ drupal_subdomain }}.{{ drupal_raw_domain }}.{{ drupal_tld }}"
+drupal_path: "/var/www/drupalvm"
+drupal_site_path: "{{ drupal_path }}/{{ drupal_domain }}"
+drupal_env: "dev"
+drupal_site_name: "{{ drupal_raw_domain }} - {{drupal_env}}"
+
+# mysql admin credential
+mysql_admin_user: root
+mysql_admin_password: root
